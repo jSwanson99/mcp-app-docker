@@ -1,0 +1,3 @@
+[submodule "mcp-servers/py-repl"]
+	path = mcp-servers/py-repl
+	url = git@github.com:jSwanson99/mcp-py-repl.git

@@ -1,0 +1,17 @@
+generic:
+  base_url: "http://ollama:11434/v1"
+  api_key: "ollama"
+
+default_model: "generic.qwen3:4b"
+
+logger:
+  progress_display: false
+  show_chat: true
+  show_tools: true
+  truncate_tools: true
+
+mcp:
+  servers:
+    pyrepl:
+      transport: sse
+      url: http://mcp-server-pyrepl:8000/sse

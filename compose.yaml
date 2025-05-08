@@ -1,0 +1,42 @@
+services:
+  mcp-app:
+    image: localhost/mcp-app
+    container_name: mcp-app
+    ports: 
+      - "8001:8001"
+    build:
+      context: ./mcp-client/
+
+  mcp-server-pyrepl:
+    image: localhost/mcp-server-pyrepl
+    container_name: mcp-server-pyrepl
+    ports: 
+      - "8000:8000"
+    build:
+      context: ./mcp-servers/py-repl/
+
+  mcp-inspector:
+    image: mcp-inspector
+    container_name: mcp-inspector
+    ports: 
+      - "6274:6274"
+      - "6277:6277"
+
+  ollama:
+    image: ollama/ollama:0.6.8
+    container_name: ollama
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
+    volumes:
+      - /root/.ollama:/root/.ollama:z
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all
+
