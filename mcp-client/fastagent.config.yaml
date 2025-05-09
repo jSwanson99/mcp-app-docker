@@ -15,3 +15,8 @@ mcp:
     pyrepl:
       transport: sse
       url: http://mcp-server-pyrepl:8000/sse
+      read_transport_sse_timeout_seconds: 120
+      roots:
+        - uri: "file://./mount-point/"
+          name: "test_data"
+          server_uri_alias: "file:///mnt/data/"

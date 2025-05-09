@@ -14,6 +14,18 @@ services:
       - "8000:8000"
     build:
       context: ./mcp-servers/py-repl/
+    volumes:
+      - ./mount-point:/mnt/data:rw,z
+
+  mcp-server-filesystem:
+    image: localhost/mcp-server-filesystem
+    container_name: mcp-server-filesystem
+    ports: 
+      - "8002:8000"
+    build:
+      context: ./mcp-servers/mcp-filesystem/
+    volumes:
+      - ./mount-point:/projects:rw,z
 
   mcp-inspector:
     image: mcp-inspector
@@ -23,6 +35,7 @@ services:
       - "6277:6277"
 
   ollama:
+    privileged: true # Seems to need privileged for gpu support
     image: ollama/ollama:0.6.8
     container_name: ollama
     restart: unless-stopped
