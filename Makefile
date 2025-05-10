@@ -1,7 +1,7 @@
 .PHONY: start stop restart build
 
 mcp-server-pyrepl := "localhost/mcp-server-pyrepl"
-mcp-filesystem:= "localhost/mcp-filesystem"
+mcp-filesystem:= "localhost/mcp-server-filesystem"
 mcp-app := "localhost/mcp-app"
 
 restart: stop start

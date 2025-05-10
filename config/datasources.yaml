@@ -1,0 +1,15 @@
+apiVersion: 1
+
+datasources:
+  - name: clickhouse
+    type: grafana-clickhouse-datasource
+    jsonData:
+      host: clickhouse
+      port: 9000
+      defaultDatabase: default
+      tlsSkipVerify: true
+      secure: false
+      username: default
+      useOtel: true
+    secureJsonData:
+      password: password

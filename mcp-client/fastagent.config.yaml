@@ -2,7 +2,7 @@ generic:
   base_url: "http://ollama:11434/v1"
   api_key: "ollama"
 
-default_model: "generic.qwen3:4b"
+default_model: "generic.qwen3:1.7b"
 
 logger:
   progress_display: false
@@ -15,8 +15,11 @@ mcp:
     pyrepl:
       transport: sse
       url: http://mcp-server-pyrepl:8000/sse
-      read_transport_sse_timeout_seconds: 120
       roots:
         - uri: "file://./mount-point/"
           name: "test_data"
           server_uri_alias: "file:///mnt/data/"
+
+otel:
+  enabled: true
+  otlp_endpoint: http://otelcol:4318/v1/traces

@@ -1,4 +1,45 @@
 services:
+  clickhouse:
+    image: clickhouse
+    container_name: clickhouse
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    environment:
+      - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=password
+    healthcheck:
+      test: wget --no-verbose --tries=5 --spider http://localhost:8123 || exit 1
+      interval: 3s
+      retries: 5
+      start_period: 10s
+      timeout: 10s
+
+  otelcol:
+    image: otel/opentelemetry-collector-contrib
+    container_name: otelcol
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+    volumes:
+      - ./config/otelcol.yaml:/etc/otelcol-contrib/config.yaml:z
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+        restart: true
+
+  grafana:
+    image: grafana/grafana:11.5.3
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./config/grafana.ini:/usr/share/grafana/conf/custom.ini:z
+    environment:
+      - GF_PLUGINS_PREINSTALL=grafana-clickhouse-datasource
+
   mcp-app:
     image: localhost/mcp-app
     container_name: mcp-app
@@ -16,16 +57,21 @@ services:
       context: ./mcp-servers/py-repl/
     volumes:
       - ./mount-point:/mnt/data:rw,z
+    environment:
+      - COLLECTOR_URL="http://otelcol:4318"
+      - OTEL_ENABLED=true
+      - OTEL_SERVICE_NAME="mcp-server-pyrepl"
 
   mcp-server-filesystem:
     image: localhost/mcp-server-filesystem
     container_name: mcp-server-filesystem
     ports: 
-      - "8002:8000"
+      - "8002:3001"
     build:
       context: ./mcp-servers/mcp-filesystem/
     volumes:
       - ./mount-point:/projects:rw,z
+    command: /projects
 
   mcp-inspector:
     image: mcp-inspector
@@ -53,3 +99,5 @@ services:
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
 
+volumes:
+  clickhouse_data:
