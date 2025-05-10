@@ -1,3 +1,9 @@
 [submodule "mcp-servers/py-repl"]
 	path = mcp-servers/py-repl
 	url = git@github.com:jSwanson99/mcp-py-repl.git
+[submodule "mcp-servers/mcp-filesystem"]
+	path = mcp-servers/mcp-filesystem
+	url = git@github.com:ysthink/Filesystem-MCP-Server-SSE.git
+[submodule "lib/fast-agent"]
+	path = lib/fast-agent
+	url = git@github.com:evalstate/fast-agent.git
