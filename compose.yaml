@@ -37,6 +37,7 @@ services:
       - "3000:3000"
     volumes:
       - ./config/grafana.ini:/usr/share/grafana/conf/custom.ini:z
+      - ./config/datasources.yaml:/etc/grafana/provisioning/datasources/default.yaml:z
     environment:
       - GF_PLUGINS_PREINSTALL=grafana-clickhouse-datasource
 
@@ -47,6 +48,10 @@ services:
       - "8001:8001"
     build:
       context: ./mcp-client/
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT="http://otelcol:4318"
+      - OTEL_ENABLED=true
+      - OTEL_SERVICE_NAME=mcp-app
 
   mcp-server-pyrepl:
     image: localhost/mcp-server-pyrepl
@@ -58,9 +63,9 @@ services:
     volumes:
       - ./mount-point:/mnt/data:rw,z
     environment:
-      - COLLECTOR_URL="http://otelcol:4318"
+      - OTEL_EXPORTER_OTLP_ENDPOINT="http://otelcol:4318"
       - OTEL_ENABLED=true
-      - OTEL_SERVICE_NAME="mcp-server-pyrepl"
+      - OTEL_SERVICE_NAME=mcp-server-pyrepl
 
   mcp-server-filesystem:
     image: localhost/mcp-server-filesystem

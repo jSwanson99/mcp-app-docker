@@ -1,8 +1,18 @@
-FROM python:3.11-slim
-EXPOSE 8001
+FROM ghcr.io/astral-sh/uv:python3.13-bookworm-slim
+
 WORKDIR /app
 
-COPY ./ /app/
-RUN pip install --no-cache-dir -r requirements.txt
+ENV UV_COMPILE_BYTECODE=1
+ENV UV_LINK_MODE=copy
 
-CMD ["python", "main.py", "--server", "--port", "8001"]
+COPY uv.lock .
+COPY pyproject.toml .
+COPY fastagent.config.yaml .
+
+RUN uv sync
+
+COPY src ./src
+
+EXPOSE 8001
+
+CMD ["uv", "run", "src/main.py", "--server", "--port", "8001"]

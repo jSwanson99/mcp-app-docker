@@ -21,5 +21,5 @@ mcp:
           server_uri_alias: "file:///mnt/data/"
 
 otel:
-  enabled: true
+  enabled: false
   otlp_endpoint: http://otelcol:4318/v1/traces
